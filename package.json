@@ -15,5 +15,10 @@
 		"svelte": "^4.2.7",
 		"vite": "^5.0.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@d3/versor-dragging": "https://api.observablehq.com/@d3/versor-dragging@231.tgz?v=3",
+		"@observablehq/runtime": "^5.9.7",
+		"d3": "^7.8.5"
+	}
 }
