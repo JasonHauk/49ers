@@ -14,7 +14,7 @@
   let chartContainer;
   let countries = [];
   let matchingCountries = [];
-  let filteredCountries = [];
+  let filteredCountries = ["United States", "India", "China", "Russia", "Japan"];
   let suggestionText = '';
   let country_hovered = -1;
 
@@ -70,6 +70,17 @@
   function add() {
     suggestionText = matchingCountries.join(', '); // Display suggestions
   }
+
+  function setDefault() {
+    filteredCountries = ["United States", "India", "China", "Russia", "Japan"];
+  }
+  $: {
+    // Check if searchQuery is an empty string, then call setDefault
+    if (searchQuery === '') {
+      setDefault();
+    }
+  }
+
   $: {
   console.log(searchQuery)
   console.log(searchQuery.includes(searchQuery))
@@ -79,6 +90,10 @@
     searchQuery = country;
     add(); // Trigger the add function to update suggestions
   }
+  function clearSearch() {
+    searchQuery = '';
+    setDefault(); // Reset filteredCountries when clearing the search
+  }
 </script>
 
 
@@ -86,7 +101,7 @@
   <h1>Elec Per Capita</h1>
   <form on:submit|preventDefault={add}>
     <input bind:value={searchQuery} placeholder="Search for a Country" on:input={add} />
-    
+    <button on:click={clearSearch} class="clear-button">X</button>
     {#if !countries.includes(searchQuery)}
       <div>
         {#each filteredCountries as country}
@@ -113,7 +128,12 @@
       <div></div> <!-- No need for bind:this here -->
     {/if}
   {/if}
+
+
+  
 </main>
+
+
  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
@@ -160,6 +180,17 @@
       font-family: 'Nunito', sans-serif;
       font-size: 14px;
       vertical-align: middle;
+    }
+    .clear-button {
+      background-color: #FE8787; 
+      color: #000000;
+      width: 25px; 
+      height: 25px;
+      font-size: 10px;
+      line-height: -20px;
+      vertical-align: middle;
+      border-radius: 8px;
+      font-weight: bold;
     }
     button.active {
       /* Styles for the active state go here */

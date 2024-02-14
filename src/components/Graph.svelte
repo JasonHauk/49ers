@@ -16,7 +16,24 @@
 	let gx;
 	let gy;
 	let tooltipPt = null;
-  
+
+	let sources = [
+		{text: "biofuel", show: true},
+		{text: "coal", show: true},
+		{text: "fossil", show: true},
+		{text: "gas", show: true},
+		{text: "hydro", show: true},
+		{text: "low_carbon", show: true},
+		{text: "nuclear", show: true},
+		{text: "oil", show: true},
+		{text: "solar", show: true},
+		{text: "wind", show: true},
+		{text: "other_renewables", show: true},
+	];
+
+  	// Filter columns based on the show property in sources
+	$: visibleColumns = sources.filter(source => source.show).map(source => source.text);
+
 	// Filter data for 'United States'
 	$: before = data.filter((d) => d.country === searchQuery);
 	$: filteredData = before.filter((d) => d.year >= 1960);
@@ -31,29 +48,30 @@
   
 	// Adjust scales for 'year' and selected column
     $: x = d3
-	.scaleBand()
-	.domain(filteredData.map((d) => d.year))
-	.range([marginLeft, width - marginRight])
-	.padding(0.1);
-	
-	$: y = d3
-	.scaleLinear()
-	.domain([0, d3.max(filteredData, (d) => d[selectedColumn])])
-	.nice()
-	.range([height - marginBottom, marginTop]);
+      .scaleBand()
+      .domain(filteredData.map((d) => d.year))
+      .range([marginLeft, width - marginRight])
+      .padding(0.1);
+ 
+    $: y = d3
+      .scaleLinear()
+      .domain([0, d3.max(filteredData, (d) => d3.max(columns, column => d[column]))])
+      .nice()
+      .range([height - marginBottom, marginTop]);
+ 
+    let highlightedPoint = null;
+ 
+    // Adjust axis creation for 'year' and selected column
+    $: d3.select(gx).call(d3.axisBottom(x).tickValues(x.domain().filter(year => year % 5 === 0)));
+    $: d3.select(gy)
+      .call(d3.axisLeft(y).ticks(null, 's'))
+      .call((g) =>
+        g.selectAll('.tick line')
+          .clone()
+          .attr('x2', width - marginRight - marginLeft)
+          .attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1))
+      );
 
-	let highlightedPoint = null;
-
-	// Adjust axis creation for 'year' and selected column
-	$: d3.select(gx).call(d3.axisBottom(x).tickValues(x.domain().filter(year => year % 5 === 0)));
-	$: d3.select(gy)
-	.call(d3.axisLeft(y).ticks(null, 's'))
-	.call((g) =>
-		g.selectAll('.tick line')
-		.clone()
-		.attr('x2', width - marginRight - marginLeft)
-		.attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1))
-	);
 
 	// Adjust rendering of lines connecting the dots
 	$: d3.select(svg)
@@ -77,17 +95,15 @@
 		.attr('stroke-opacity', 0.7);
 	});
 
-
-  
 	// Adjust rendering of points for 'year' and all columns
 	$: d3.select(svg)
-  .selectAll('g.column-group')
-  .data(filteredData)
-  .join('g')
-  .attr('class', 'column-group')
-  .each(function (d) {
+	.selectAll('g.column-group')
+	.data(filteredData)
+	.join('g')
+	.attr('class', 'column-group')
+	.each(function (d) {
     // Filter out NaN values before binding data to circles
-    const filteredColumns = columns.filter(column => !isNaN(d[column]));
+    const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
 
     d3.select(this)
       .selectAll('circle')
@@ -167,6 +183,21 @@
 	  {/if}
 	</div>
   </div>
+
+  <!-- <main class="source" style="display: flex; flex-wrap: wrap;">
+	{#each sources as source}
+		<div class="source-item">
+			<input
+            	bind:checked={source.show}
+            	id={source.text}
+            	type="checkbox"
+            	class="checkbox-round"
+        	/>
+			<label for={source.text} style="color: {colorScale(source.text)};">{source.text}</label>
+		</div>
+	{/each}
+  </main> -->
+
   
   <style>
 	.legend {
