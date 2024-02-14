@@ -64,8 +64,7 @@
 	.each(function (column) {
 		const line = d3.line()
 		.x(d => x(d.year))
-		.y(d => y(d[column]));
-
+  		.y(d => isNaN(d[column]) ? null : y(d[column]));
 
 		d3.select(this)
 		.append('path')

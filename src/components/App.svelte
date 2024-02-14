@@ -67,11 +67,14 @@
 
   $: filteredCountries = matchingCountries.slice(0, 5);
 
-
   function add() {
     suggestionText = matchingCountries.join(', '); // Display suggestions
   }
-
+  $: {
+  console.log(searchQuery)
+  console.log(searchQuery.includes(searchQuery))
+  }
+  // "United States", "India", "China", "Russia", "Japan"
   function setSearchQuery(country) {
     searchQuery = country;
     add(); // Trigger the add function to update suggestions
@@ -83,10 +86,10 @@
   <h1>Elec Per Capita</h1>
   <form on:submit|preventDefault={add}>
     <input bind:value={searchQuery} placeholder="Search for a Country" on:input={add} />
- 
-    {#if suggestionText}
+    
+    {#if !countries.includes(searchQuery)}
       <div>
-        {#each filteredCountries as country, index}
+        {#each filteredCountries as country}
         <button 
             on:click={() => setSearchQuery(country)}
             on:mouseover={(event) => { country_hovered = country;}}
@@ -99,10 +102,6 @@
       </div>
     {/if}
   </form>
-  <!-- <div
-		class={country_hovered === -1 ? "tooltip-hidden": "tooltip-visible"}	
-	>
-	</div> -->
 
   {#if isLoading}
     <p>Loading...</p>
