@@ -34,10 +34,8 @@
           oil: +d.oil_elec_per_capita,
           solar: +d.solar_elec_per_capita,
           wind: +d.wind_elec_per_capita,
-          other_renewables: +d.other_renewables_elec_per_capita,
           fossil: +d.fossil_elec_per_capita,
           low_carbon: +d.low_carbon_elec_per_capita,
-          renewables: +d.other_renewables_elec_per_capita,
         };
       });
       countries = new Set(data.map(d => d.country));

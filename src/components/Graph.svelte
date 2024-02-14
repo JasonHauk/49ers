@@ -28,7 +28,6 @@
 		{text: "oil", show: true},
 		{text: "solar", show: true},
 		{text: "wind", show: true},
-		{text: "other_renewables", show: true},
 	];
 
   	// Filter columns based on the show property in sources
