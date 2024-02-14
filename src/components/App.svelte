@@ -28,15 +28,16 @@
           country: d.country,
           biofuel: +d.biofuel_elec_per_capita,
           coal: +d.coal_elec_per_capita,
-          fossil: +d.fossil_elec_per_capita,
           gas: +d.gas_elec_per_capita,
           hydro: +d.hydro_elec_per_capita,
-          low_carbon: +d.low_carbon_elec_per_capita,
           nuclear: +d.nuclear_elec_per_capita,
           oil: +d.oil_elec_per_capita,
-          other_renewables: +d.other_renewables_elec_per_capita,
           solar: +d.solar_elec_per_capita,
           wind: +d.wind_elec_per_capita,
+          other_renewables: +d.other_renewables_elec_per_capita,
+          fossil: +d.fossil_elec_per_capita,
+          low_carbon: +d.low_carbon_elec_per_capita,
+          renewables: +d.other_renewables_elec_per_capita,
         };
       });
       countries = new Set(data.map(d => d.country));
