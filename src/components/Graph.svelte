@@ -55,6 +55,30 @@
 		.attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1))
 	);
 
+	// Adjust rendering of lines connecting the dots
+	$: d3.select(svg)
+	.selectAll('.line-group')
+	.data(columns)
+	.join('g')
+	.attr('class', 'line-group')
+	.each(function (column) {
+		const line = d3.line()
+		.x(d => x(d.year))
+		.y(d => y(d[column]));
+
+
+		d3.select(this)
+		.append('path')
+		.datum(filteredData)
+		.attr('class', 'line')
+		.attr('d', line)
+		.attr('stroke', getColorForColumn(column))
+		.attr('stroke-width', 1)
+		.attr('fill', 'none')
+		.attr('stroke-opacity', 0.7);
+	});
+
+
   
 	// Adjust rendering of points for 'year' and all columns
 	$: d3.select(svg)
