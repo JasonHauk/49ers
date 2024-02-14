@@ -161,4 +161,8 @@
 	  height: 16px;
 	  margin-right: 4px;
 	}
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> 1ac45dced73ac697503864d7fa5f4e7d6b7a530c
