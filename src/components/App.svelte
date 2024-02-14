@@ -69,17 +69,6 @@
 
 
   function add() {
-    // Logic to filter countries based on searchQuery
-    // matchingCountries = countries.filter(country =>
-    //   country.toLowerCase().startsWith(searchQuery.toLowerCase())
-    // );
-
-    // // Use Set to eliminate duplicates
-    // const uniqueCountriesSet = new Set(matchingCountries);
-
-    // // Convert Set back to array
-    // filteredCountries = Array.from(uniqueCountriesSet).slice(0, 5);
-
     suggestionText = matchingCountries.join(', '); // Display suggestions
   }
 
@@ -94,25 +83,26 @@
   <h1>Elec Per Capita</h1>
   <form on:submit|preventDefault={add}>
     <input bind:value={searchQuery} placeholder="Search for a Country" on:input={add} />
-
+ 
     {#if suggestionText}
-      <!-- <p>Suggestions: {suggestionText}</p> -->
       <div>
-        {#each filteredCountries as country (country)}
-          <button 
+        {#each filteredCountries as country, index}
+        <button 
             on:click={() => setSearchQuery(country)}
-            style="background-color: #FFC4EB; 
-                    color: #000000; 
-                    font-family: 'Nunito', sans-serif;
-                    font-size: 14px;
-                    vertical-align: middle;">
-                    
+            on:mouseover={(event) => { country_hovered = country;}}
+            on:mouseout={(event) => { country_hovered = -1; }}
+            class:active={country_hovered === country}
+            >         
             {country}
           </button>
         {/each}
       </div>
     {/if}
   </form>
+  <!-- <div
+		class={country_hovered === -1 ? "tooltip-hidden": "tooltip-visible"}	
+	>
+	</div> -->
 
   {#if isLoading}
     <p>Loading...</p>
@@ -166,6 +156,15 @@
       padding: 5px; /* Adjust the padding as needed */
       width: 150px; /* Adjust the width as needed */
       height: 60px; /* Adjust the height as needed */
-      /* Add any other styling you want */
+      background-color: #FFC4EB; 
+      color: #000000; 
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    button.active {
+      /* Styles for the active state go here */
+      background-color: #DD6AB6;
+      color: #000000;
     }
   </style>

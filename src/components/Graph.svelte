@@ -30,30 +30,31 @@
 	$: colorScale = columns.length > 0 ? d3.scaleOrdinal().domain(columns).range(d3.schemeCategory10) : null;
   
 	// Adjust scales for 'year' and selected column
-	$: x = d3
-	  .scaleLinear()
-	  .domain(d3.extent(filteredData, (d) => d.year))
-	  .range([marginLeft, width - marginRight]);
-  
+    $: x = d3
+	.scaleBand()
+	.domain(filteredData.map((d) => d.year))
+	.range([marginLeft, width - marginRight])
+	.padding(0.1);
+	
 	$: y = d3
-	  .scaleLinear()
-	  .domain([0, d3.max(filteredData, (d) => d[selectedColumn])])
-	  .nice()
-	  .range([height - marginBottom, marginTop]);
-  
+	.scaleLinear()
+	.domain([0, d3.max(filteredData, (d) => d[selectedColumn])])
+	.nice()
+	.range([height - marginBottom, marginTop]);
+
 	let highlightedPoint = null;
-  
+
 	// Adjust axis creation for 'year' and selected column
-	$: d3.select(gx).call(d3.axisBottom(x).ticks(width / 80));
+	$: d3.select(gx).call(d3.axisBottom(x).tickValues(x.domain().filter(year => year % 5 === 0)));
 	$: d3.select(gy)
-	  .call(d3.axisLeft(y).ticks(null, '+'))
-	  .call((g) =>
-		g
-		  .selectAll('.tick line')
-		  .clone()
-		  .attr('x2', width - marginRight - marginLeft)
-		  .attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1)),
-	  );
+	.call(d3.axisLeft(y).ticks(null, 's'))
+	.call((g) =>
+		g.selectAll('.tick line')
+		.clone()
+		.attr('x2', width - marginRight - marginLeft)
+		.attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1))
+	);
+
   
 	// Adjust rendering of points for 'year' and all columns
 	$: d3.select(svg)
@@ -107,7 +108,7 @@
 		  font-weight="bold"
 		  text-anchor="start"
 		>
-		  Population
+		  Electricity Per Captia
 		</text>
 	  </g>
   
