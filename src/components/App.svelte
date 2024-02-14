@@ -20,9 +20,7 @@
 
   onMount(async () => {
     try {
-      const res = await fetch(
-        'https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv',
-      );
+      const res = await fetch('p3_energy_data.csv');
       const csv = await res.text();
       data = d3.csvParse(csv, (d) => {
         return {
@@ -36,7 +34,7 @@
           low_carbon: +d.low_carbon_elec_per_capita,
           nuclear: +d.nuclear_elec_per_capita,
           oil: +d.oil_elec_per_capita,
-          other_renewables: +d.other_renewable_elec_per_capita,
+          other_renewables: +d.other_renewables_elec_per_capita,
           solar: +d.solar_elec_per_capita,
           wind: +d.wind_elec_per_capita,
         };
@@ -81,11 +79,6 @@
     }
   }
 
-  $: {
-  console.log(searchQuery)
-  console.log(searchQuery.includes(searchQuery))
-  }
-  // "United States", "India", "China", "Russia", "Japan"
   function setSearchQuery(country) {
     searchQuery = country;
     add(); // Trigger the add function to update suggestions
