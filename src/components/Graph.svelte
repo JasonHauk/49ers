@@ -14,7 +14,6 @@
 	let svg;
 	let gx;
 	let gy;
-	let tooltipPt = null;
 	let point_hovered = -1;
 	let recorded_mouse_position = {x: 0, y: 0};
 
@@ -70,7 +69,6 @@
       .nice()
       .range([height - marginBottom, marginTop]);
  
-    let highlightedPoint = null;
  
     // Adjust axis creation for 'year' and selected column
     $: d3.select(gx).call(d3.axisBottom(x).tickValues(x.domain().filter(year => year % 5 === 0)));
@@ -129,9 +127,7 @@
                 .attr('fill', (column) => getColorForColumn(column))
                 //   added this
                 .on('mouseover', (event, column) => {
-                    point_hovered = { year: d.year, value: y(d[column]), column: [column] };
-                    highlightedPoint = { year: d.year, [column]: d[column] };
-                    tooltipPt = { year: d.year, [column]: d[column] };
+                    point_hovered = { year: d.year, value: (d[column]), column: [column] };
                     recorded_mouse_position = {
                         x: event.pageX,
                         y: event.pageY
@@ -139,8 +135,6 @@
                 })
                 .on('mouseout', () => {
                     point_hovered = -1;
-                    highlightedPoint = null;
-                    tooltipPt = null;
                 });
         });
   
@@ -163,28 +157,6 @@
         }
     }
 
-	
-  // ... (previous code)
-
-  // Function to find the closest point to the cursor
-  function findClosestPoint(event, data) {
-    const filteredColumns = visibleColumns.filter(column => !isNaN(data[column]));
-
-    const distances = filteredColumns.map(column => ({
-      column,
-      distance: Math.abs(y(data[column]) - event.pageY)
-    }));
-
-    const closestPoint = distances.reduce((prev, curr) =>
-      prev.distance < curr.distance ? prev : curr
-    );
-
-    return {
-      year: data.year,
-      value: y(data[closestPoint.column]),
-      column: [closestPoint.column]
-    };
-  }
   </script>
   
   <div class="population-plot">
@@ -273,10 +245,10 @@
         font-family: "Nunito", sans-serif;
         visibility: visible;
         border-radius: 10px;
-        width: 80px;
+        width: 90px;
         color: black;
         position: absolute;
-        padding: 5px;
+        padding: 7px;
     }
 	
 </style>

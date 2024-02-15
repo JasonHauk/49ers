@@ -85,7 +85,6 @@
 
 <main>
   <h1>Energy Consumption Per Capita By Country</h1>
-  <!-- <form on:submit|preventDefault={add}> -->
     <input bind:value={searchQuery} placeholder="Search for a Country" on:input />
     <button on:click={clearSearch} class="clear-button">X</button>
     {#if !countries.includes(searchQuery)}
@@ -102,7 +101,6 @@
         {/each}
       </div>
     {/if}
-  <!-- </form> -->
 
   {#if isLoading}
     <p>Loading...</p>
