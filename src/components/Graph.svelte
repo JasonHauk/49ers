@@ -201,7 +201,7 @@
 	  <g bind:this={gy} transform="translate({marginLeft},0)">
 		<!-- x-axis label -->
     	<text
-      		x={(width - marginLeft - marginRight) / 2 + marginRight}
+      		x={(width - marginLeft - marginRight) / 2 + marginRight - 15}
       		y={height - marginBottom / 2}
       		dy="1.5em"
       		fill="#000"
@@ -214,7 +214,7 @@
     	<!-- y-axis label -->
     	<text
       		x={-(height - marginRight - marginLeft) / 2 - marginRight}
-      		y={-marginLeft + marginRight}
+      		y={-marginLeft + marginRight - 10}
       		dy="0em"
       		fill="#000"
       		font-weight="bold"
