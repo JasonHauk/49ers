@@ -113,6 +113,8 @@
         .data(filteredData)
         .join('g')
         .attr('class', 'column-group')
+		// .on('pointerenter pointermove', onPointerMove)
+    	// .on('pointerleave', onPointerLeave)
         .each(function (d) {
             // Filter out NaN values before binding data to circles
             const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
@@ -156,6 +158,22 @@
             return cursorX; // Default position to the right
         }
     }
+// added this
+	// const bisect = d3.bisector((d) => d.year).center;
+	// let tooltipPt = null;
+	// function onPointerMove(event) {
+	// 	const mouseX = d3.pointer(event)[0];
+	// 	const index = Math.floor((mouseX - marginLeft) / x.bandwidth());
+		
+	// 	// Ensure the index is within the valid range
+	// 	const i = Math.max(0, Math.min(filteredData.length - 1, index));
+
+	// 	tooltipPt = filteredData[i];
+	// 	console.log(tooltipPt)
+	// }
+	// function onPointerLeave(event) {
+	// 	tooltipPt = null;
+	// }
 
   </script>
   
@@ -194,9 +212,15 @@
       		text-anchor="middle"
       		transform="rotate(-90)"
     	>
-      		Electricity Per Capita
+      		Electricity Per Capita in Kilowatt Hours (kWh)
     	</text>
 	  </g>
+	  <!-- tooltip -->
+	  <!-- {#if tooltipPt}
+		<g transform="translate({x(tooltipPt.date)},{y(tooltipPt.value)})">
+			<text font-weight="bold">{tooltipPt.value}</text>
+		</g>
+		{/if} -->
 	</svg>
 	
 	<!-- tooltip -->
@@ -211,13 +235,14 @@
 						flex-direction: column; 
 						align-items: flex-start; 
 						min-width: fit-content;">
-				<!-- <div>Source: {point_hovered.column}</div> -->
 				<div>Year: {point_hovered.year}</div>
 				<div>Value: {point_hovered.value.toFixed(2)}</div>
 			</div>
 		{/if}
 	</div>
   </div>
+
+
   
   <div class="source" style="display: flex; flex-wrap: wrap;">
 	{#each sources as source}
