@@ -21,14 +21,14 @@
 	let sources = [
 		{text: "biofuel", show: true},
 		{text: "coal", show: true},
-		{text: "fossil", show: true},
 		{text: "gas", show: true},
 		{text: "hydro", show: true},
-		{text: "low_carbon", show: true},
 		{text: "nuclear", show: true},
 		{text: "oil", show: true},
 		{text: "solar", show: true},
 		{text: "wind", show: true},
+		{text: "fossil", show: false},
+		{text: "low_carbon", show: false},
 	];
 
 	const color = {
