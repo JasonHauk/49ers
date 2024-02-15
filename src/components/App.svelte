@@ -7,7 +7,6 @@
   import define from "@d3/versor-dragging";
 
   let data = [];
-  let selectedColumn = 'biofuel';
   let searchQuery = 'United States';
   let isLoading = true;
   let loadingError = null;
@@ -15,7 +14,6 @@
   let countries = [];
   let matchingCountries = [];
   let filteredCountries = ["United States", "India", "China", "Russia", "Japan"];
-  let suggestionText = '';
   let country_hovered = -1;
 
   onMount(async () => {
@@ -64,10 +62,6 @@
 
   $: filteredCountries = matchingCountries.slice(0, 5);
 
-  function add() {
-    suggestionText = matchingCountries.join(', '); // Display suggestions
-  }
-
   function setDefault() {
     filteredCountries = ["United States", "India", "China", "Russia", "Japan"];
   }
@@ -80,8 +74,8 @@
 
   function setSearchQuery(country) {
     searchQuery = country;
-    add(); // Trigger the add function to update suggestions
   }
+
   function clearSearch() {
     searchQuery = '';
     setDefault(); // Reset filteredCountries when clearing the search
@@ -91,8 +85,8 @@
 
 <main>
   <h1>Elec Per Capita</h1>
-  <form on:submit|preventDefault={add}>
-    <input bind:value={searchQuery} placeholder="Search for a Country" on:input={add} />
+  <!-- <form on:submit|preventDefault={add}> -->
+    <input bind:value={searchQuery} placeholder="Search for a Country" on:input />
     <button on:click={clearSearch} class="clear-button">X</button>
     {#if !countries.includes(searchQuery)}
       <div>
@@ -108,25 +102,21 @@
         {/each}
       </div>
     {/if}
-  </form>
+  <!-- </form> -->
 
   {#if isLoading}
     <p>Loading...</p>
   {:else if loadingError}
     <p>{loadingError}</p>
   {:else}
-    <Graph {data} {selectedColumn} {searchQuery}/>
+    <Graph {data} {searchQuery}/>
     {#if chartContainer}
       <div></div> <!-- No need for bind:this here -->
     {/if}
   {/if}
 
-
-  
 </main>
 
-
- 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
  
@@ -176,13 +166,14 @@
     .clear-button {
       background-color: #FE8787; 
       color: #000000;
-      width: 25px; 
-      height: 25px;
-      font-size: 10px;
-      line-height: -20px;
+      width: 22px; 
+      height: 22px;
+      font-size: 11px;
+      /* line-height: -20px; */
       vertical-align: middle;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: bold;
+      padding: 2px;
     }
     button.active {
       /* Styles for the active state go here */
