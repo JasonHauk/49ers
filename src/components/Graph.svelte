@@ -6,10 +6,10 @@
   
 	const width = 928;
 	const height = 600;
-	const marginTop = 20;
+	const marginTop = 30;
 	const marginRight = 30;
-	const marginBottom = 30;
-	const marginLeft = 40;
+	const marginBottom = 60;
+	const marginLeft = 70;
   
 	let svg;
 	let gx;
@@ -199,16 +199,31 @@
 	  <g bind:this={gx} transform="translate(0,{height - marginBottom})" />
 	  <!-- y-axis -->
 	  <g bind:this={gy} transform="translate({marginLeft},0)">
-		<text
-		  x="5"
-		  y={marginTop}
-		  dy="0.32em"
-		  fill="#000"
-		  font-weight="bold"
-		  text-anchor="start"
-		>
-		  Electricity Per Captia
-		</text>
+		<!-- x-axis label -->
+    	<text
+      		x={(width - marginLeft - marginRight) / 2 + marginRight}
+      		y={height - marginBottom / 2}
+      		dy="1.5em"
+      		fill="#000"
+      		font-weight="bold"
+			font-size="16px"
+      		text-anchor="middle"
+   		>
+      		Year
+    	</text>
+    	<!-- y-axis label -->
+    	<text
+      		x={-(height - marginRight - marginLeft) / 2 - marginRight}
+      		y={-marginLeft + marginRight}
+      		dy="0em"
+      		fill="#000"
+      		font-weight="bold"
+			font-size="16px"
+      		text-anchor="middle"
+      		transform="rotate(-90)"
+    	>
+      		Electricity Per Capita
+    	</text>
 	  </g>
 	</svg>
 	
