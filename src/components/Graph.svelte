@@ -85,9 +85,11 @@
 
 
 	// Adjust rendering of lines connecting the dots
-	$: d3.select(svg)
+	$: {
+        let visibleColumnsFiltered = columns.filter(column => sources.find(source => source.text === column && source.show));
+		d3.select(svg)
         .selectAll('.line-group')
-        .data(columns)
+        .data(visibleColumnsFiltered, d => d)
         .join('g')
         .attr('class', 'line-group')
         .each(function (column) {
@@ -105,6 +107,7 @@
 				.attr('fill', 'none')
 				.attr('stroke-opacity', 0.7);
         });
+	}
 
 	// Adjust rendering of points for 'year' and all columns
 	$: d3.select(svg)
