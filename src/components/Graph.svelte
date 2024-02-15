@@ -66,7 +66,7 @@
  
     $: y = d3
       .scaleLinear()
-      .domain([0, d3.max(filteredData, (d) => d3.max(columns, column => d[column]))])
+      .domain([0, d3.max(filteredData, (d) => d3.max(visibleColumns, column => d[column]))])
       .nice()
       .range([height - marginBottom, marginTop]);
  
@@ -255,10 +255,10 @@
 
 	.source-item {
 		display: inline-block;
-        padding: 0 5px;
+        padding: 0px 5px;
 		height: 50px;
         border-radius: 10px;
-    	margin: 0 5px; /* Adjust margin between items if needed */
+    	margin: 5px 5px; /* Adjust margin between items if needed */
   	}
 
 	.tooltip-hidden {
