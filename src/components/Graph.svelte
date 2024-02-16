@@ -113,8 +113,16 @@
         .data(filteredData)
         .join('g')
         .attr('class', 'column-group')
-		// .on('pointerenter pointermove', onPointerMove)
-    	// .on('pointerleave', onPointerLeave)
+		// .on('pointerenter pointermove', (event, column) => {
+        //             point_hovered = { year: d.year, value: (d[column]), column: [column] };
+        //             recorded_mouse_position = {
+        //                 x: event.pageX,
+        //                 y: event.pageY
+        //             };
+        //         })
+    	// .on('pointerleave', () => {
+        //             point_hovered = -1;
+        //         })
         .each(function (d) {
             // Filter out NaN values before binding data to circles
             const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
@@ -128,17 +136,38 @@
                 .attr('r', 2.5)
                 .attr('fill', (column) => getColorForColumn(column))
                 //   added this
-                .on('mouseover', (event, column) => {
-                    point_hovered = { year: d.year, value: (d[column]), column: [column] };
-                    recorded_mouse_position = {
-                        x: event.pageX,
-                        y: event.pageY
-                    };
-                })
-                .on('mouseout', () => {
-                    point_hovered = -1;
-                });
-        });
+                // .on('pointerenter pointermove', (event, column) => {
+                //     point_hovered = { year: d.year, value: (d[column]), column: [column] };
+                //     recorded_mouse_position = {
+                //         x: event.pageX,
+                //         y: event.pageY
+                //     };
+                // })
+                // .on('pointerleave', () => {
+                //     point_hovered = -1;
+                // });
+			// area of tooltip
+			d3.select(this)
+				.selectAll('circle.new')
+				.data(filteredColumns)
+				.join('circle')
+				.attr('class', 'new')
+				.attr('cx', (column) => x(d.year))
+				.attr('cy', (column) => y(d[column]))
+				.attr('r', 7) // Adjust the radius as needed
+				// .attr('fill', 'red') // Set the color for the new set
+				.attr('fill-opacity', 0.0) // Set the opacity for the new set
+				.on('pointerenter pointermove', (event, column) => {
+					point_hovered = { year: d.year, value: d[column], column: [column] };
+					recorded_mouse_position = {
+						x: event.pageX,
+						y: event.pageY
+					};
+				})
+				.on('pointerleave', () => {
+					point_hovered = -1;
+				});
+        })
   
 	// Function to get color based on the selected column
 	function getColorForColumn(column) {
@@ -169,7 +198,7 @@
 	// 	const i = Math.max(0, Math.min(filteredData.length - 1, index));
 
 	// 	tooltipPt = filteredData[i];
-	// 	console.log(tooltipPt)
+	// 	console.log(i)
 	// }
 	// function onPointerLeave(event) {
 	// 	tooltipPt = null;
@@ -215,12 +244,6 @@
       		Electricity Per Capita in Kilowatt Hours (kWh)
     	</text>
 	  </g>
-	  <!-- tooltip -->
-	  <!-- {#if tooltipPt}
-		<g transform="translate({x(tooltipPt.date)},{y(tooltipPt.value)})">
-			<text font-weight="bold">{tooltipPt.value}</text>
-		</g>
-		{/if} -->
 	</svg>
 	
 	<!-- tooltip -->
@@ -236,7 +259,7 @@
 						align-items: flex-start; 
 						min-width: fit-content;">
 				<div>Year: {point_hovered.year}</div>
-				<div>Value: {point_hovered.value.toFixed(2)}</div>
+				<div>Value: {point_hovered.value.toFixed(2)} kWh</div>
 			</div>
 		{/if}
 	</div>
@@ -285,7 +308,7 @@
         font-family: "Nunito", sans-serif;
         visibility: visible;
         border-radius: 10px;
-        width: 90px;
+        width: 120px;
         color: black;
         position: absolute;
         padding: 7px;

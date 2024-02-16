@@ -84,7 +84,10 @@
 
 
 <main>
-  <h1>Energy Consumption Per Capita By Country</h1>
+  <h1>Got Electricity?</h1>
+    <p class="tagline">
+      Try searching up a country to break down its sources of electricity per capita
+    </p>
     <input bind:value={searchQuery} placeholder="Search for a Country" on:input />
     <button on:click={clearSearch} class="clear-button">X</button>
     {#if !countries.includes(searchQuery)}
@@ -137,18 +140,25 @@
  
     main {
       text-align: center;
-      font-family: 'Nunito', sans-serif;
+      font-family: "Overlock", sans-serif;
       font-weight: 300;
-      line-height: 2;
+      line-height: 1;
       font-size: 24px;
       color: var(--color-text);
     }
  
     h1 {
-      font-size: 2em;
+      font-size: 1.5em;
       font-weight: 300;
       line-height: 2;
     }
+
+    .tagline {
+      font-size: 1em;
+      font-weight: 300;
+      line-height: 1;
+    }
+
 
     button {
       margin: 5px; /* Adjust the margin as needed */
