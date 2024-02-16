@@ -3,8 +3,6 @@
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
   import Graph from '../components/Graph.svelte';
-  import { Runtime, Inspector } from "@observablehq/runtime";
-  import define from "@d3/versor-dragging";
 
   let data = [];
   let searchQuery = 'United States';
@@ -41,12 +39,12 @@
       chartContainer = document.createElement('div');
       document.body.appendChild(chartContainer);
 
-      const runtime = new Runtime();
-      const main = runtime.module(define, (name) => {
-        if (name === "chart") {
-          return new Inspector(chartContainer);
-        }
-      });
+      // const runtime = new Runtime();
+      // const main = runtime.module(define, (name) => {
+      //   if (name === "chart") {
+      //     return new Inspector(chartContainer);
+      //   }
+      // });
 
       isLoading = false;
     } catch (error) {

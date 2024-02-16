@@ -14,6 +14,7 @@
 	let svg;
 	let gx;
 	let gy;
+	let ggy;
 	let point_hovered = -1;
 	let recorded_mouse_position = {x: 0, y: 0};
 
@@ -26,6 +27,18 @@
 		{text: "oil", show: true},
 		{text: "solar", show: true},
 		{text: "wind", show: true},
+		{text: "fossil", show: false},
+		{text: "low_carbon", show: false},
+	];
+	let sources_f = [
+		{text: "biofuel", show: false},
+		{text: "coal", show: false},
+		{text: "gas", show: false},
+		{text: "hydro", show: false},
+		{text: "nuclear", show: false},
+		{text: "oil", show: false},
+		{text: "solar", show: false},
+		{text: "wind", show: false},
 		{text: "fossil", show: false},
 		{text: "low_carbon", show: false},
 	];
@@ -72,7 +85,8 @@
  
     // Adjust axis creation for 'year' and selected column
     $: d3.select(gx).call(d3.axisBottom(x).tickValues(x.domain().filter(year => year % 5 === 0)));
-    $: d3.select(gy)
+    $: { d3.select(gy).selectAll("*").remove()
+		d3.select(gy)
       .call(d3.axisLeft(y).ticks(null, 's'))
       .call((g) =>
         g.selectAll('.tick line')
@@ -80,7 +94,7 @@
           .attr('x2', width - marginRight - marginLeft)
           .attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1))
       );
-
+	}
 
 	// Adjust rendering of lines connecting the dots
 	$: {
@@ -113,16 +127,6 @@
         .data(filteredData)
         .join('g')
         .attr('class', 'column-group')
-		// .on('pointerenter pointermove', (event, column) => {
-        //             point_hovered = { year: d.year, value: (d[column]), column: [column] };
-        //             recorded_mouse_position = {
-        //                 x: event.pageX,
-        //                 y: event.pageY
-        //             };
-        //         })
-    	// .on('pointerleave', () => {
-        //             point_hovered = -1;
-        //         })
         .each(function (d) {
             // Filter out NaN values before binding data to circles
             const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
@@ -135,17 +139,7 @@
                 .attr('cy', (column) => y(d[column]))
                 .attr('r', 2.5)
                 .attr('fill', (column) => getColorForColumn(column))
-                //   added this
-                // .on('pointerenter pointermove', (event, column) => {
-                //     point_hovered = { year: d.year, value: (d[column]), column: [column] };
-                //     recorded_mouse_position = {
-                //         x: event.pageX,
-                //         y: event.pageY
-                //     };
-                // })
-                // .on('pointerleave', () => {
-                //     point_hovered = -1;
-                // });
+
 			// area of tooltip
 			d3.select(this)
 				.selectAll('circle.new')
@@ -187,23 +181,6 @@
             return cursorX; // Default position to the right
         }
     }
-// added this
-	// const bisect = d3.bisector((d) => d.year).center;
-	// let tooltipPt = null;
-	// function onPointerMove(event) {
-	// 	const mouseX = d3.pointer(event)[0];
-	// 	const index = Math.floor((mouseX - marginLeft) / x.bandwidth());
-		
-	// 	// Ensure the index is within the valid range
-	// 	const i = Math.max(0, Math.min(filteredData.length - 1, index));
-
-	// 	tooltipPt = filteredData[i];
-	// 	console.log(i)
-	// }
-	// function onPointerLeave(event) {
-	// 	tooltipPt = null;
-	// }
-
   </script>
   
   <div class="population-plot">
@@ -216,20 +193,21 @@
 	>
 	  <!-- x-axis -->
 	  <g bind:this={gx} transform="translate(0,{height - marginBottom})" />
-	  <!-- y-axis -->
-	  <g bind:this={gy} transform="translate({marginLeft},0)">
-		<!-- x-axis label -->
-    	<text
-      		x={(width - marginLeft - marginRight) / 2 + marginRight - 15}
-      		y={height - marginBottom / 2}
-      		dy="1.5em"
-      		fill="#000"
-      		font-weight="bold"
+	  <!-- x-axis label -->
+		<text
+			x={(width - marginLeft - marginRight) / 2 + marginRight + 55}
+			y={height - marginBottom / 2}
+			dy="1.5em"
+			fill="#000"
+			font-weight="bold"
 			font-size="16px"
-      		text-anchor="middle"
-   		>
-      		Year
-    	</text>
+			text-anchor="middle"
+		>
+			Year
+		</text>
+	  <!-- y-axis -->
+	  <g bind:this={gy} transform="translate({marginLeft},0)"/>
+	  <g transform="translate({marginLeft},0)">
     	<!-- y-axis label -->
     	<text
       		x={-(height - marginRight - marginLeft) / 2 - marginRight}
