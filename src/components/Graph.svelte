@@ -14,8 +14,8 @@
 	let svg;
 	let gx;
 	let gy;
-	let ggy;
 	let point_hovered = -1;
+	let max_year = -1;
 	let recorded_mouse_position = {x: 0, y: 0};
 
 	let sources = [
@@ -27,18 +27,6 @@
 		{text: "oil", show: true},
 		{text: "solar", show: true},
 		{text: "wind", show: true},
-		{text: "fossil", show: false},
-		{text: "low_carbon", show: false},
-	];
-	let sources_f = [
-		{text: "biofuel", show: false},
-		{text: "coal", show: false},
-		{text: "gas", show: false},
-		{text: "hydro", show: false},
-		{text: "nuclear", show: false},
-		{text: "oil", show: false},
-		{text: "solar", show: false},
-		{text: "wind", show: false},
 		{text: "fossil", show: false},
 		{text: "low_carbon", show: false},
 	];
@@ -55,8 +43,7 @@
 		'fossil': '#009933',
 		'low_carbon': '#ff00ff',
 	};
-
-
+	
   	// Filter columns based on the show property in sources
 	$: visibleColumns = sources.filter(source => source.show).map(source => source.text);
 
@@ -135,22 +122,34 @@
                 .selectAll('circle')
                 .data(filteredColumns)
                 .join('circle')
-                .attr('cx', (column) => x(d.year))
+                .attr('cx', x(d.year))
                 .attr('cy', (column) => y(d[column]))
                 .attr('r', 2.5)
                 .attr('fill', (column) => getColorForColumn(column))
 
-			// area of tooltip
+        })
+		
+	// area of tooltip
+	$: d3.select(svg)
+        .selectAll('g.column-group')
+        .data(filteredData)
+        .join('g')
+        .attr('class', 'column-group')
+        .each(function (d) {
+            // Filter out NaN values before binding data to circles
+            const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
+
 			d3.select(this)
 				.selectAll('circle.new')
 				.data(filteredColumns)
 				.join('circle')
 				.attr('class', 'new')
-				.attr('cx', (column) => x(d.year))
+				.attr('cx', x(d.year))
 				.attr('cy', (column) => y(d[column]))
-				.attr('r', 7) // Adjust the radius as needed
-				// .attr('fill', 'red') // Set the color for the new set
+				.attr('r', 6.5) // Adjust the radius as needed
+				.attr('fill', 'red') // Set the color for the new set
 				.attr('fill-opacity', 0.0) // Set the opacity for the new set
+				.attr('clip-path', 'url(#clip-path)')
 				.on('pointerenter pointermove', (event, column) => {
 					point_hovered = { year: d.year, value: d[column], column: [column] };
 					recorded_mouse_position = {
@@ -161,6 +160,19 @@
 				.on('pointerleave', () => {
 					point_hovered = -1;
 				});
+        })
+	
+	// max source tooltip
+	$: d3.select(svg)
+        .selectAll('g.column-group')
+        .data(filteredData)
+        .join('g')
+        .attr('class', 'column-group')
+        .each(function (d) {
+			d3.select(this)
+				.on('pointerenter pointermove', (event, column) => {
+					max_year = { ttmax: d.tt };
+				})
         })
   
 	// Function to get color based on the selected column
@@ -178,9 +190,13 @@
         if (cursorX > screenWidth / 2) {
             return cursorX - tooltipWidth - 10; // Adjust 20 as needed for spacing
         } else {
+			// console.log(cursorX)
             return cursorX; // Default position to the right
         }
     }
+	$: {
+		console.log(filteredData[62].tt)
+	}
   </script>
   
   <div class="population-plot">
@@ -243,6 +259,30 @@
 	</div>
   </div>
 
+  <div
+		class={"tooltip-visible"}
+		style={`left: 1200px; 
+				top: 200px; 
+				};`}
+	>
+		{#if max_year !== -1}
+			<div style="display: flex; 
+						flex-direction: column; 
+						align-items: flex-start; 
+						min-width: fit-content;
+						font-size: 16px; /* Adjust the font size as needed */">
+				<div>{max_year.ttmax}</div>
+			</div>
+		{:else}
+			<div style="display: flex; 
+					flex-direction: column; 
+					align-items: flex-start; 
+					min-width: fit-content;
+					font-size: 16px; /* Adjust the font size as needed */">
+			<div>{filteredData[62].tt}</div>
+			</div>
+		{/if}
+	</div>
 
   
   <div class="source" style="display: flex; flex-wrap: wrap;">
@@ -281,6 +321,14 @@
 		position: absolute;
 	}
 
+	.tt-hidden {
+        visibility: hidden;
+        opacity: 0; /* Start with opacity set to 0 */
+        transition: opacity 2s ease-out; /* Add a fade-out transition over 0.5 seconds */
+        font-family: "Nunito", sans-serif;
+        width: 200px;
+        position: absolute;
+    }
     .tooltip-visible {
         font: 12px sans-serif;
         font-family: "Nunito", sans-serif;

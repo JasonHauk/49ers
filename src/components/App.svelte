@@ -32,19 +32,13 @@
           wind: +d.wind_elec_per_capita,
           fossil: +d.fossil_elec_per_capita,
           low_carbon: +d.low_carbon_elec_per_capita,
+          tt: d.max
         };
       });
       countries = new Set(data.map(d => d.country));
       // Initialize the chart container
       chartContainer = document.createElement('div');
       document.body.appendChild(chartContainer);
-
-      // const runtime = new Runtime();
-      // const main = runtime.module(define, (name) => {
-      //   if (name === "chart") {
-      //     return new Inspector(chartContainer);
-      //   }
-      // });
 
       isLoading = false;
     } catch (error) {
@@ -168,14 +162,19 @@
       font-family: 'Nunito', sans-serif;
       font-size: 14px;
       vertical-align: middle;
+      display: inline-block;
     }
+    input {
+      position: relative;
+      left: 0;
+    }
+
     .clear-button {
       background-color: #FE8787; 
       color: #000000;
       width: 22px; 
       height: 22px;
       font-size: 11px;
-      /* line-height: -20px; */
       vertical-align: middle;
       border-radius: 10px;
       font-weight: bold;
