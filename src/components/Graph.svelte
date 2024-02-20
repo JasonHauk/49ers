@@ -270,8 +270,9 @@
 
   <div
 		class={"tooltip-visible"}
-		style={`left: 1250px; 
-				top: 200px; 
+		style={`right: ${marginRight}px; 
+            transform: translate(0, -50%); 
+			top: 170px;
 				`}
 	>
 		{#if max_year !== -1}
