@@ -96,51 +96,99 @@
       );
 	}
 
-	// Adjust rendering of lines connecting the dots
 	$: {
-        let visibleColumnsFiltered = columns.filter(column => sources.find(source => source.text === column && source.show));
-		d3.select(svg)
-        .selectAll('.line-group')
-        .data(visibleColumnsFiltered, d => d)
-        .join('g')
-        .attr('class', 'line-group')
-        .each(function (column) {
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => isNaN(d[column]) ? null : y(d[column]));
+    let visibleColumnsFiltered = columns.filter(column => sources.find(source => source.text === column && source.show));
 
-			d3.select(this)
-				.append('path')
-				.datum(filteredData)
-				.attr('class', 'line')
-				.attr('d', line)
-				.attr('stroke', getColorForColumn(column))
-				.attr('stroke-width', 1)
-				.attr('fill', 'none')
-				.attr('stroke-opacity', 0.7);
-        });
-	}
+    // Select and update existing line groups
+    let lineGroups = d3.select(svg).selectAll('.line-group').data(visibleColumnsFiltered, d => d);
+
+    // Update existing lines
+    lineGroups.each(function (column) {
+        const line = d3.line()
+            .x(d => x(d.year))
+            .y(d => isNaN(d[column]) ? null : y(d[column]));
+
+        d3.select(this)
+            .selectAll('.line')
+            .data([filteredData]) // Use an array with a single element to ensure only one line is created per group
+            .join('path')
+            .attr('class', 'line')
+            .attr('d', line)
+            .attr('stroke', getColorForColumn(column))
+            .attr('stroke-width', 1)
+            .attr('fill', 'none')
+            .attr('stroke-opacity', 0.7);
+    });
+
+    // Enter new line groups
+    let newLineGroups = lineGroups.enter()
+        .append('g')
+        .attr('class', 'line-group');
+
+    // Render lines for new line groups
+    newLineGroups.each(function (column) {
+        const line = d3.line()
+            .x(d => x(d.year))
+            .y(d => isNaN(d[column]) ? null : y(d[column]));
+
+        d3.select(this)
+            .append('path')
+            .datum(filteredData)
+            .attr('class', 'line')
+            .attr('d', line)
+            .attr('stroke', getColorForColumn(column))
+            .attr('stroke-width', 1)
+            .attr('fill', 'none')
+            .attr('stroke-opacity', 0.7);
+    });
+
+    // Exit old line groups
+    lineGroups.exit().remove();
+}
 
 	// Adjust rendering of points for 'year' and all columns
-	$: d3.select(svg)
-        .selectAll('g.column-group')
-        .data(filteredData)
-        .join('g')
-        .attr('class', 'column-group')
-        .each(function (d) {
-            // Filter out NaN values before binding data to circles
-            const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
+$: d3.select(svg)
+    .selectAll('g.column-group')
+    .data(filteredData)
+    .join('g')
+    .attr('class', 'column-group')
+    .each(function (d) {
+        // Filter out NaN values before binding data to circles
+        const filteredColumns = visibleColumns.filter(column => !isNaN(d[column]));
 
-            d3.select(this)
-                .selectAll('circle')
-                .data(filteredColumns)
-                .join('circle')
-                .attr('cx', x(d.year))
-                .attr('cy', (column) => y(d[column]))
-                .attr('r', 2.5)
-                .attr('fill', (column) => getColorForColumn(column))
+        // Update existing circles
+        d3.select(this)
+            .selectAll('circle')
+            .data(filteredColumns, column => column) // Use the column as the key
+            .join('circle')
+            .attr('cx', x(d.year))
+            .attr('cy', column => y(d[column]))
+            .attr('r', 2.5)
+            .attr('fill', column => getColorForColumn(column));
 
-        })
+        // Enter new circles
+        d3.select(this)
+            .selectAll('circle.new')
+            .data(filteredColumns.filter(column => !isNaN(d[column])), column => column) // Use the column as the key
+            .join('circle')
+            .attr('class', 'new')
+            .attr('cx', x(d.year))
+            .attr('cy', column => y(d[column]))
+            .attr('r', 6.5) // Adjust the radius as needed
+            .attr('fill', 'red') // Set the color for the new set
+            .attr('fill-opacity', 0.0) // Set the opacity for the new set
+            .attr('clip-path', 'url(#clip-path)')
+            .on('pointerenter pointermove', (event, column) => {
+                point_hovered = { year: d.year, value: d[column], column: [column] };
+                recorded_mouse_position = {
+                    x: event.pageX,
+                    y: event.pageY
+                };
+            })
+            .on('pointerleave', () => {
+                point_hovered = -1;
+            });
+    });
 		
 	// area of tooltip
 	$: d3.select(svg)
