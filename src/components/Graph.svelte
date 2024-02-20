@@ -14,8 +14,9 @@
 	let svg;
 	let gx;
 	let gy;
-	let point_hovered = -1;
 	let max_year = -1;
+	let default_tt = "Aside from the aggregates of fossil and low_carbon, the largest source used for 2022 in United States is gas.";
+	let point_hovered = -1;
 	let recorded_mouse_position = {x: 0, y: 0};
 
 	let sources = [
@@ -27,6 +28,18 @@
 		{text: "oil", show: true},
 		{text: "solar", show: true},
 		{text: "wind", show: true},
+		{text: "fossil", show: false},
+		{text: "low_carbon", show: false},
+	];
+	let sources_f = [
+		{text: "biofuel", show: false},
+		{text: "coal", show: false},
+		{text: "gas", show: false},
+		{text: "hydro", show: false},
+		{text: "nuclear", show: false},
+		{text: "oil", show: false},
+		{text: "solar", show: false},
+		{text: "wind", show: false},
 		{text: "fossil", show: false},
 		{text: "low_carbon", show: false},
 	];
@@ -161,19 +174,6 @@
 					point_hovered = -1;
 				});
         })
-	
-	// max source tooltip
-	$: d3.select(svg)
-        .selectAll('g.column-group')
-        .data(filteredData)
-        .join('g')
-        .attr('class', 'column-group')
-        .each(function (d) {
-			d3.select(this)
-				.on('pointerenter pointermove', (event, column) => {
-					max_year = { ttmax: d.tt };
-				})
-        })
   
 	// Function to get color based on the selected column
 	function getColorForColumn(column) {
@@ -190,13 +190,22 @@
         if (cursorX > screenWidth / 2) {
             return cursorX - tooltipWidth - 10; // Adjust 20 as needed for spacing
         } else {
-			// console.log(cursorX)
             return cursorX; // Default position to the right
         }
     }
-	$: {
-		console.log(filteredData[62].tt)
-	}
+	// max source tooltip
+	$: d3.select(svg)
+        .selectAll('g.column-group')
+        .data(filteredData)
+        .join('g')
+        .attr('class', 'column-group')
+        .each(function (d) {
+			d3.select(this)
+				.on('pointerenter pointermove', (event, column) => {
+					max_year = { ttmax: d.tt };
+				})
+        })
+	
   </script>
   
   <div class="population-plot">
@@ -261,7 +270,7 @@
 
   <div
 		class={"tooltip-visible"}
-		style={`left: 1200px; 
+		style={`left: 1250px; 
 				top: 200px; 
 				};`}
 	>
@@ -269,22 +278,29 @@
 			<div style="display: flex; 
 						flex-direction: column; 
 						align-items: flex-start; 
-						min-width: fit-content;
+						min-width: 225px;
 						font-size: 16px; /* Adjust the font size as needed */">
 				<div>{max_year.ttmax}</div>
 			</div>
-		{:else}
-			<div style="display: flex; 
-					flex-direction: column; 
-					align-items: flex-start; 
-					min-width: fit-content;
-					font-size: 16px; /* Adjust the font size as needed */">
-			<div>{filteredData[62].tt}</div>
-			</div>
 		{/if}
 	</div>
-
-  
+	<div
+		class={"tooltip-visible"}
+		style={`left: 1250px; 
+				top: 200px; 
+				};`}
+	>
+		{#if max_year === -1}
+		<div style="display: flex; 
+				flex-direction: column; 
+				align-items: flex-start; 
+				min-width: 225px;
+				font-size: 16px; /* Adjust the font size as needed */">
+		<div>{default_tt}</div>
+		</div>
+		{/if}
+	</div>
+		
   <div class="source" style="display: flex; flex-wrap: wrap;">
 	{#each sources as source}
 		<div class="source-item" style="background-color: {source.show ? color[source.text] : 'white'} ;">
@@ -321,14 +337,6 @@
 		position: absolute;
 	}
 
-	.tt-hidden {
-        visibility: hidden;
-        opacity: 0; /* Start with opacity set to 0 */
-        transition: opacity 2s ease-out; /* Add a fade-out transition over 0.5 seconds */
-        font-family: "Nunito", sans-serif;
-        width: 200px;
-        position: absolute;
-    }
     .tooltip-visible {
         font: 12px sans-serif;
         font-family: "Nunito", sans-serif;
