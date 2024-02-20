@@ -108,6 +108,8 @@
     {/if}
   {/if}
 
+  <a href="Writeup.md" style="position: absolute; left: 20px; bottom: 10px; font-size: 14px;">Click here for Project Writeup!</a>
+
 </main>
 
   <style>

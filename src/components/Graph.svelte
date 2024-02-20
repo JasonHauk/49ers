@@ -7,7 +7,7 @@
 	const width = 928;
 	const height = 600;
 	const marginTop = 30;
-	const marginRight = 30;
+	const marginRight = 140;
 	const marginBottom = 60;
 	const marginLeft = 70;
   
@@ -220,7 +220,7 @@
 	  <g bind:this={gx} transform="translate(0,{height - marginBottom})" />
 	  <!-- x-axis label -->
 		<text
-			x={(width - marginLeft - marginRight) / 2 + marginRight + 55}
+			x={(width - marginLeft - marginRight) / 2 + 55}
 			y={height - marginBottom / 2}
 			dy="1.5em"
 			fill="#000"
@@ -235,8 +235,8 @@
 	  <g transform="translate({marginLeft},0)">
     	<!-- y-axis label -->
     	<text
-      		x={-(height - marginRight - marginLeft) / 2 - marginRight}
-      		y={-marginLeft + marginRight - 10}
+      		x={-(height - 30 - marginLeft) / 2 - 30}
+      		y={-marginLeft + 30}
       		dy="0em"
       		fill="#000"
       		font-weight="bold"
@@ -272,7 +272,7 @@
 		class={"tooltip-visible"}
 		style={`left: 1250px; 
 				top: 200px; 
-				};`}
+				`}
 	>
 		{#if max_year !== -1}
 			<div style="display: flex; 
@@ -286,9 +286,10 @@
 	</div>
 	<div
 		class={"tooltip-visible"}
-		style={`left: 1250px; 
-				top: 200px; 
-				};`}
+		style={`right: ${marginRight}px; 
+            transform: translate(0, -50%); 
+			top: 170px;
+				`}
 	>
 		{#if max_year === -1}
 		<div style="display: flex; 
@@ -301,7 +302,7 @@
 		{/if}
 	</div>
 		
-  <div class="source" style="display: flex; flex-wrap: wrap;">
+  <div class="legend" style="position: absolute; left: calc(100% - 120px); top: 230px;">
 	{#each sources as source}
 		<div class="source-item" style="background-color: {source.show ? color[source.text] : 'white'} ;">
 			<input
@@ -316,19 +317,29 @@
   </div>
 
   <style>
-	.source {
+	.legend {
 		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
+		flex-direction: column;
+    	align-items: flex-start;
 	}
 
 	.source-item {
 		display: inline-block;
+		align-items: center;
         padding: 0px 5px;
-		height: 50px;
-        border-radius: 10px;
-    	margin: 5px 5px; /* Adjust margin between items if needed */
+        border-radius: 5px;
+    	margin: 1.5px 0; /* Adjust margin between items if needed */
   	}
+
+	.source-item input[type="checkbox"] {
+    	margin-right: 3px; /* Adjust margin between checkbox and label */
+    	width: 12px; /* Adjust checkbox size */
+    	height: 12px; /* Adjust checkbox size */
+	}
+
+	.source-item label {
+    	font-size: 16px; /* Adjust font size */
+	}
 
 	.tooltip-hidden {
 		visibility: hidden;
