@@ -327,7 +327,7 @@ $: d3.select(svg)
 			<div 
 				style="
 					display: inline-block;
-					border: 2px solid black; /* Add border styling */
+					//border: 2px solid black; /* Add border styling */
 					padding: 5px; /* Add padding for better visibility */
 				"
 			>
@@ -336,7 +336,7 @@ $: d3.select(svg)
 						align-items: flex-start; 
 						min-width: 225px;
 						font-size: 16px; /* Adjust the font size as needed */">
-				<div>{max_year.ttmax}</div>
+				<div><strong>{max_year.ttmax}</strong></div>
 			</div>
 			</div>
 		{/if}
@@ -354,7 +354,7 @@ $: d3.select(svg)
 				align-items: flex-start; 
 				min-width: 225px;
 				font-size: 16px; /* Adjust the font size as needed */">
-		<div>{default_tt}</div>
+		<div><strong>{default_tt}<strong></div>
 		</div>
 		{/if}
 	</div>
