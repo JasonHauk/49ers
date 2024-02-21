@@ -15,7 +15,7 @@
 	let gx;
 	let gy;
 	let max_year = -1;
-	let default_tt = "Aside from the aggregates of fossil and low_carbon, the largest source used for 2022 in United States is gas.";
+	let default_tt = "The largest source used for 2022 in United States is gas.*";
 	let point_hovered = -1;
 	let recorded_mouse_position = {x: 0, y: 0};
 
@@ -320,7 +320,7 @@ $: d3.select(svg)
 		class={"tooltip-visible"}
 		style={`right: ${marginRight}px; 
             transform: translate(0, -50%); 
-			top: 170px;
+			top: 180px;
 				`}
 	>
 		{#if max_year !== -1}
@@ -337,7 +337,7 @@ $: d3.select(svg)
 		class={"tooltip-visible"}
 		style={`right: ${marginRight}px; 
             transform: translate(0, -50%); 
-			top: 170px;
+			top: 180px;
 				`}
 	>
 		{#if max_year === -1}
