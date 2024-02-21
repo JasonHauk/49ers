@@ -110,7 +110,7 @@
     {/if}
   {/if}
 
-  <a href="Writeup.md" style="position: absolute; left: 20px; bottom: 10px; font-size: 14px;">Click here for Project Writeup!</a>
+  <a href="Writeup.html" target="_blank" style="position: absolute; left: 50px; font-size: 14px;">Click here for Project Writeup!</a>
   <a style="position: absolute; right: 16px; bottom: -10x; font-size: 14px;">*Aside from the aggregates of fossil and low_carbon.</a>
 
 </main>

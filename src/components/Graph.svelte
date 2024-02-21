@@ -324,12 +324,20 @@ $: d3.select(svg)
 				`}
 	>
 		{#if max_year !== -1}
+			<div 
+				style="
+					display: inline-block;
+					border: 2px solid black; /* Add border styling */
+					padding: 5px; /* Add padding for better visibility */
+				"
+			>
 			<div style="display: flex; 
 						flex-direction: column; 
 						align-items: flex-start; 
 						min-width: 225px;
 						font-size: 16px; /* Adjust the font size as needed */">
 				<div>{max_year.ttmax}</div>
+			</div>
 			</div>
 		{/if}
 	</div>
@@ -351,7 +359,7 @@ $: d3.select(svg)
 		{/if}
 	</div>
 		
-  <div class="legend" style="position: absolute; left: calc(100% - 120px); top: 230px;">
+  <div class="legend" style="position: absolute; left: calc(100% - 130px); top: 230px;">
 	{#each sources as source}
 		<div class="source-item" style="background-color: {source.show ? color[source.text] : 'white'} ;">
 			<input
