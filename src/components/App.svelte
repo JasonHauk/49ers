@@ -79,7 +79,7 @@
   <h1>Got Electricity?</h1>
     <p class="tagline">
       Look below to see the breakdown of a country's electricity generation per capita by power source since 1960.<br>
-      Try searching up a country and toggle the sources to explore these trends!
+      Try searching up a country (or continent) and toggle the sources to explore these trends!
     </p>
     <input bind:value={searchQuery} placeholder="Search for a Country" on:input />
     <button on:click={clearSearch} class="clear-button">X</button>
